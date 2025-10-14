@@ -1,30 +1,91 @@
 digraph ATM {
     rankdir=TB;
-    node [fontname="Arial", fontsize=10];
+    node [fontname="Arial", fontsize=11];
 
-    // Düğümler biçimleri
-    start [shape=oval, label="BAŞLA"];
-    pin_giris [shape=parallelogram, label="PIN gir"];
-    kontrol_pin [shape=diamond, label="PIN doğru mu?"];
-    pin_hata [shape=box, label="deneme_hakki = deneme_hakki - 1"];
-    pin_hak_kontrol [shape=diamond, label="deneme_hakki = 0 mı?"];
-    kart_bloke [shape=oval, label="Kart bloke oldu\nBITIR"];
-    menu [shape=parallelogram, label="Menü göster:\n1-Bakiye\n2-Para çek\n3-Çıkış"];
-    secim_kontrol [shape=diamond, label="Seçim nedir?"];
-    bakiye_yaz [shape=parallelogram, label="Bakiye göster"];
-    tutar_giris [shape=parallelogram, label="Tutar gir"];
-    tutar_mod [shape=diamond, label="Tutar 20 TL'nin katı mı?"];
-    bakiye_kontrol [shape=diamond, label="Yeterli bakiye var mı?"];
-    limit_kontrol [shape=diamond, label="Günlük limit uygun mu?"];
-    para_cek [shape=box, label="bakiye = bakiye - tutar\ngunluk_limit = gunluk_limit - tutar"];
-    islem_basari [shape=parallelogram, label="İşlem başarılı\nYeni bakiye ve limit göster"];
-    gecersiz [shape=parallelogram, label="Geçersiz seçim"];
-    tekrar [shape=parallelogram, label="Başka işlem yapmak ister misiniz? (E/H)"];
-    cevap_kontrol [shape=diamond, label="Cevap = H mı?"];
-    bitis [shape=oval, label="Kartı iade et\nİyi günler\nBITIR"];
+    // --- Şekil Tanımları ---
+    start [label="BASLA", shape=oval, style=filled, fillcolor=lightgreen];
+    end [label="BITIR", shape=oval, style=filled, fillcolor=lightcoral];
 
-    // Akış
-    start -> pin_giris;
-    pin_giris -> kontrol_pin;
+    pin_input [label="OKU girilen_pin", shape=parallelogram];
+    pin_check [label="girilen_pin = dogru_pin ?", shape=diamond];
+    pin_correct [label="PIN doğrulandı", shape=parallelogram];
+    pin_wrong [label="Hatalı PIN!\n deneme_hakki = deneme_hakki - 1", shape=box];
+    pin_try [label="deneme_hakki > 0 ?", shape=diamond];
+    card_block [label="Kart bloke edildi!", shape=parallelogram];
 
-    kontrol_pin -> menu [label="Evet"];
+    menu [label="Menü Göster\n1-Bakiye\n2-Para Çek\n3-Çıkış", shape=parallelogram];
+    read_choice [label="OKU secim", shape=parallelogram];
+    choice_check [label="Seçim ?", shape=diamond];
+
+    show_balance [label="YAZ bakiye", shape=parallelogram];
+
+    read_amount [label="OKU tutar", shape=parallelogram];
+    check_mod [label="tutar % 20 = 0 ?", shape=diamond];
+    check_balance [label="tutar ≤ bakiye ?", shape=diamond];
+    check_limit [label="tutar ≤ günlük limit ?", shape=diamond];
+    withdraw [label="bakiye -= tutar\ngünlük_limit -= tutar", shape=box];
+    withdraw_done [label="YAZ işlem başarılı\nKalan bakiye ve limit", shape=parallelogram];
+
+    invalid_choice [label="Geçersiz seçim!", shape=parallelogram];
+    limit_error [label="Günlük limit aşıldı!", shape=parallelogram];
+    balance_error [label="Yetersiz bakiye!", shape=parallelogram];
+    mod_error [label="Tutar 20 TL'nin katı olmalı!", shape=parallelogram];
+
+    another [label="Başka işlem? (E/H)", shape=parallelogram];
+    repeat [label="cevap = 'E' ?", shape=diamond];
+    goodbye [label="Kartınızı almayı unutmayın.\nİyi günler!", shape=parallelogram];
+
+    // --- Bağlantılar ---
+    start -> pin_input;
+    pin_input -> pin_check;
+
+    pin_check -> pin_correct [label="Evet"];
+    pin_check -> pin_wrong [label="Hayır"];
+
+    pin_wrong -> pin_try;
+    pin_try -> pin_input [label="Evet"];
+    pin_try -> card_block [label="Hayır"];
+
+    card_block -> end;
+    pin_correct -> menu;
+
+    // --- Ana Menü ---
+    menu -> read_choice;
+    read_choice -> choice_check;
+
+    choice_check -> show_balance [label="1"];
+    choice_check -> read_amount [label="2"];
+    choice_check -> goodbye [label="3"];
+    choice_check -> invalid_choice [label="Diğer"];
+
+    show_balance -> another;
+
+    // --- Para Çekme İşlemi ---
+    read_amount -> check_mod;
+    check_mod -> check_balance [label="Evet"];
+    check_mod -> mod_error [label="Hayır"];
+
+    mod_error -> another;
+
+    check_balance -> check_limit [label="Evet"];
+    check_balance -> balance_error [label="Hayır"];
+
+    balance_error -> another;
+
+    check_limit -> withdraw [label="Evet"];
+    check_limit -> limit_error [label="Hayır"];
+
+    limit_error -> another;
+
+    withdraw -> withdraw_done;
+    withdraw_done -> another;
+
+    invalid_choice -> another;
+
+    // --- İşlem Tekrarı ---
+    another -> repeat;
+    repeat -> menu [label="Evet"];
+    repeat -> goodbye [label="Hayır"];
+
+    goodbye -> end;
+}
