@@ -1,0 +1,105 @@
+digraph E_Ticaret_Sistemi {
+    rankdir=TB;
+    node [fontname="Arial", fontsize=10];
+
+    // Başla ve Bitir
+    start [shape=ellipse, label="Başla"];
+    end [shape=ellipse, label="Bitir"];
+
+    // Kullanıcı girişi
+    giris [shape=parallelogram, label="Kullanıcı girişi yap"];
+    kontrol_giris [shape=diamond, label="Kullanıcı giriş yaptı mı?"];
+    mesaj_giris [shape=parallelogram, label="Lütfen giriş yapınız"];
+    hosgeldin [shape=parallelogram, label="Hoş geldiniz!"];
+
+    // Kategori gezinme
+    kategori_sec [shape=parallelogram, label="Kategori seç"];
+    urun_liste [shape=parallelogram, label="Ürünleri göster"];
+    sepete_ekle_sor [shape=parallelogram, label="Ürün sepete eklensin mi?"];
+    urun_stok [shape=diamond, label="Ürün stokta var mı?"];
+    sepete_ekle [shape=box, label="Ürünü sepete ekle"];
+    stok_yok [shape=parallelogram, label="Ürün stokta yok"];
+    kategori_devam [shape=diamond, label="Başka kategoriye bakılsın mı?"];
+
+    // Sepet işlemleri
+    sepet_goster [shape=parallelogram, label="Sepeti göster"];
+    sepet_duzenle_sor [shape=parallelogram, label="Sepeti düzenle?"];
+    sepet_duzenle [shape=box, label="Sepet düzenle"];
+    sepet_devam [shape=diamond, label="Sepeti güncellemek ister misiniz?"];
+
+    // İndirim
+    indirim_sor [shape=parallelogram, label="İndirim kodunuz var mı?"];
+    indirim_var [shape=diamond, label="Kod girildi mi?"];
+    indirim_kontrol [shape=box, label="İndirim kodunu kontrol et"];
+
+    // Minimum tutar
+    tutar_kontrol [shape=diamond, label="Toplam < 50 TL mi?"];
+    min_tutar_mesaj [shape=parallelogram, label="Minimum 50 TL gerekli"];
+
+    // Kargo ücreti
+    kargo_kontrol [shape=diamond, label="Toplam >= 200 TL mi?"];
+    kargo_ucretsiz [shape=box, label="Kargo ücreti = 0"];
+    kargo_ucretli [shape=box, label="Kargo ücreti = 29.99"];
+    toplam_guncelle [shape=box, label="Toplam tutarı güncelle"];
+
+    // Ödeme
+    odeme_sec [shape=parallelogram, label="Ödeme yöntemi seç"];
+    odeme_kontrol [shape=diamond, label="Geçerli ödeme yöntemi mi?"];
+    odeme_hata [shape=parallelogram, label="Geçersiz ödeme yöntemi!"];
+
+    // Onay
+    siparis_ozet [shape=parallelogram, label="Sipariş toplamını göster"];
+    siparis_onay [shape=parallelogram, label="Sipariş onaylanıyor mu?"];
+    siparis_ok [shape=parallelogram, label="Sipariş başarıyla oluşturuldu!"];
+    siparis_iptal [shape=parallelogram, label="Sipariş iptal edildi"];
+
+    // Bağlantılar
+    start -> giris -> kontrol_giris;
+    kontrol_giris -> mesaj_giris [label="Hayır"];
+    mesaj_giris -> end;
+    kontrol_giris -> hosgeldin [label="Evet"];
+
+    hosgeldin -> kategori_sec;
+    kategori_sec -> urun_liste -> sepete_ekle_sor;
+    sepete_ekle_sor -> urun_stok [label="Evet"];
+    urun_stok -> sepete_ekle [label="Evet"];
+    urun_stok -> stok_yok [label="Hayır"];
+    sepete_ekle -> kategori_devam;
+    stok_yok -> kategori_devam;
+    sepete_ekle_sor -> kategori_devam [label="Hayır"];
+    kategori_devam -> kategori_sec [label="Evet"];
+
+    kategori_devam -> sepet_goster [label="Hayır"];
+    sepet_goster -> sepet_duzenle_sor;
+    sepet_duzenle_sor -> sepet_duzenle [label="Evet"];
+    sepet_duzenle -> sepet_devam;
+    sepet_duzenle_sor -> sepet_devam [label="Hayır"];
+    sepet_devam -> sepet_goster [label="Evet"];
+    sepet_devam -> indirim_sor [label="Hayır"];
+
+    indirim_sor -> indirim_var;
+    indirim_var -> indirim_kontrol [label="Evet"];
+    indirim_var -> tutar_kontrol [label="Hayır"];
+    indirim_kontrol -> tutar_kontrol;
+
+    tutar_kontrol -> min_tutar_mesaj [label="Evet"];
+    min_tutar_mesaj -> end;
+    tutar_kontrol -> kargo_kontrol [label="Hayır"];
+
+    kargo_kontrol -> kargo_ucretsiz [label="Evet"];
+    kargo_kontrol -> kargo_ucretli [label="Hayır"];
+    kargo_ucretsiz -> toplam_guncelle;
+    kargo_ucretli -> toplam_guncelle;
+    toplam_guncelle -> odeme_sec;
+
+    odeme_sec -> odeme_kontrol;
+    odeme_kontrol -> odeme_hata [label="Hayır"];
+    odeme_hata -> end;
+    odeme_kontrol -> siparis_ozet [label="Evet"];
+
+    siparis_ozet -> siparis_onay;
+    siparis_onay -> siparis_ok [label="Evet"];
+    siparis_onay -> siparis_iptal [label="Hayır"];
+    siparis_ok -> end;
+    siparis_iptal -> end;
+}
