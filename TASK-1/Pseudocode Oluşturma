@@ -1,0 +1,75 @@
+BASLA
+
+   bakiye ← 5000          // Başlangıç bakiyesi
+   gunluk_limit ← 3000     // Günlük para çekme limiti
+   deneme_hakki ← 3        // PIN deneme hakkı
+   dogru_pin ← 1234        // Doğru PIN
+
+   // --- PIN DOĞRULAMA ---
+   DONGU (deneme_hakki > 0)
+      YAZ "Lütfen 4 haneli PIN'inizi giriniz: "
+      OKU girilen_pin
+
+      EĞER (girilen_pin = dogru_pin) İSE
+         YAZ "PIN doğrulandı."
+         ÇIK DONGUDEN
+      DEĞİLSE
+         deneme_hakki ← deneme_hakki - 1
+         YAZ "Hatalı PIN! Kalan deneme hakkı: ", deneme_hakki
+      SON
+   SON DONGU
+
+   EĞER (deneme_hakki = 0) İSE
+      YAZ "3 kez hatalı giriş yaptınız. Kartınız bloke oldu!"
+      BITIR
+   SON
+
+   // --- ANA İŞLEM DÖNGÜSÜ ---
+   DONGU (TRUE)
+      YAZ "----------------------------------"
+      YAZ "1 - Bakiye Görüntüle"
+      YAZ "2 - Para Çek"
+      YAZ "3 - Çıkış"
+      YAZ "----------------------------------"
+      YAZ "Seçiminizi giriniz: "
+      OKU secim
+
+      // --- SEÇİMLER ---
+      EĞER (secim = 1) İSE
+         YAZ "Mevcut Bakiyeniz: ", bakiye, " TL"
+
+      DEĞİLSE EĞER (secim = 2) İSE
+         YAZ "Çekmek istediğiniz tutarı giriniz: "
+         OKU tutar
+
+         // --- TUTAR KONTROLLERİ ---
+         EĞER (tutar MOD 20 ≠ 0) İSE
+            YAZ "Hata: Tutar 20 TL'nin katı olmalıdır!"
+         DEĞİLSE EĞER (tutar > bakiye) İSE
+            YAZ "Hata: Yetersiz bakiye!"
+         DEĞİLSE EĞER (tutar > gunluk_limit) İSE
+            YAZ "Hata: Günlük para çekme limitiniz (", gunluk_limit, " TL) aşıldı!"
+         DEĞİLSE
+            bakiye ← bakiye - tutar
+            gunluk_limit ← gunluk_limit - tutar
+            YAZ "İşlem başarılı! Kalan bakiye: ", bakiye, " TL"
+            YAZ "Kalan günlük limit: ", gunluk_limit, " TL"
+         SON
+      DEĞİLSE EĞER (secim = 3) İSE
+         YAZ "Kartınızı almayı unutmayın. İyi günler!"
+         ÇIK DONGUDEN
+      DEĞİLSE
+         YAZ "Geçersiz seçim! Lütfen tekrar deneyin."
+      SON
+
+      // --- İŞLEM TEKRARI SORUSU ---
+      YAZ "Başka bir işlem yapmak ister misiniz? (E/H): "
+      OKU cevap
+
+      EĞER (cevap = "H" veya cevap = "h") İSE
+         YAZ "Kartınızı almayı unutmayın. İyi günler!"
+         ÇIK DONGUDEN
+      SON
+   SON DONGU
+
+BITIR
