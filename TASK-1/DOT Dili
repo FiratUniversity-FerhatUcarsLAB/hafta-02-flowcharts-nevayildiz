@@ -1,0 +1,30 @@
+digraph ATM {
+    rankdir=TB;
+    node [fontname="Arial", fontsize=10];
+
+    // Düğümler biçimleri
+    start [shape=oval, label="BAŞLA"];
+    pin_giris [shape=parallelogram, label="PIN gir"];
+    kontrol_pin [shape=diamond, label="PIN doğru mu?"];
+    pin_hata [shape=box, label="deneme_hakki = deneme_hakki - 1"];
+    pin_hak_kontrol [shape=diamond, label="deneme_hakki = 0 mı?"];
+    kart_bloke [shape=oval, label="Kart bloke oldu\nBITIR"];
+    menu [shape=parallelogram, label="Menü göster:\n1-Bakiye\n2-Para çek\n3-Çıkış"];
+    secim_kontrol [shape=diamond, label="Seçim nedir?"];
+    bakiye_yaz [shape=parallelogram, label="Bakiye göster"];
+    tutar_giris [shape=parallelogram, label="Tutar gir"];
+    tutar_mod [shape=diamond, label="Tutar 20 TL'nin katı mı?"];
+    bakiye_kontrol [shape=diamond, label="Yeterli bakiye var mı?"];
+    limit_kontrol [shape=diamond, label="Günlük limit uygun mu?"];
+    para_cek [shape=box, label="bakiye = bakiye - tutar\ngunluk_limit = gunluk_limit - tutar"];
+    islem_basari [shape=parallelogram, label="İşlem başarılı\nYeni bakiye ve limit göster"];
+    gecersiz [shape=parallelogram, label="Geçersiz seçim"];
+    tekrar [shape=parallelogram, label="Başka işlem yapmak ister misiniz? (E/H)"];
+    cevap_kontrol [shape=diamond, label="Cevap = H mı?"];
+    bitis [shape=oval, label="Kartı iade et\nİyi günler\nBITIR"];
+
+    // Akış
+    start -> pin_giris;
+    pin_giris -> kontrol_pin;
+
+    kontrol_pin -> menu [label="Evet"];
