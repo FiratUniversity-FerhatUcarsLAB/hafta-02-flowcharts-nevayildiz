@@ -1,0 +1,119 @@
+E-ticaret sitesinde ürün ekleme, sepet yönetimi ve ödeme sürecini
+modelleyin.Sistem Gereksinimleri:
+Kullanıcı giris kontrolü (koşul)
+Urün kategorileri arasında gezinme (döngü)
+Urün sepete ekleme
+Stok kontrolü (koşul)
+Sepeti görüntüleme ve düzenleme (döngü)
+Indirim kodu uygulanabilir (koşul)
+Minimum 50 TL kontrolü (koşul)
+Kargo ücreti hesaplama (koşul: ¿200 TL ücretsiz)
+Odeme yöntemi seçimi (koşul)
+Sipariş onayı
+Harika — senin için E-ticaret sitesi ürün ekleme, sepet yönetimi ve ödeme sürecini adım adım modelleyelim.
+Aşağıda önce pseudocode (sözde kod), sonra da istersen bunu Graphviz DOT diyagramına çevirebiliriz.
+BAŞLA
+
+// Kullanıcı girişi
+Kullanıcı_girisi <- "hayır"
+KULLANICI_GİRİŞİ_YAP()
+EĞER kullanıcı_girisi = "hayır" İSE
+    ÇIKTI "Lütfen giriş yapınız."
+    BİTİR
+DEĞİLSE
+    ÇIKTI "Hoş geldiniz!"
+
+// Ürün kategorilerinde gezinme
+TEKRAR
+    ÇIKTI "Bir kategori seçin: Elektronik, Giyim, Ev, vb."
+    kategori <- KATEGORİ_SEÇ()
+    ürünler <- KATEGORİDEN_ÜRÜNLERİ_GETİR(kategori)
+    ÇIKTI ürünler
+
+    ÇIKTI "Sepete eklemek istediğiniz ürün var mı? (E/H)"
+    cevap <- GİRİŞ_AL()
+    EĞER cevap = "E" İSE
+        ürün <- ÜRÜN_SEÇ()
+        EĞER ürün.stok > 0 İSE
+            SEPETE_EKLE(ürün)
+            ÇIKTI "Ürün sepete eklendi."
+        DEĞİLSE
+            ÇIKTI "Ürün stokta yok."
+        SON
+    SON
+
+    ÇIKTI "Başka kategoriye bakmak ister misiniz? (E/H)"
+    devam <- GİRİŞ_AL()
+TAAKİ devam = "H" OLANA KADAR
+
+// Sepeti görüntüleme ve düzenleme
+TEKRAR
+    SEPETİ_GÖSTER()
+    ÇIKTI "Ürünü silmek veya adet değiştirmek ister misiniz? (E/H)"
+    düzenle <- GİRİŞ_AL()
+    EĞER düzenle = "E" İSE
+        SEPET_DÜZENLE()
+    SON
+    ÇIKTI "Sepeti güncellemek ister misiniz? (E/H)"
+    devam <- GİRİŞ_AL()
+TAAKİ devam = "H" OLANA KADAR
+
+// İndirim kodu
+ÇIKTI "İndirim kodunuz var mı? (E/H)"
+kod_var <- GİRİŞ_AL()
+EĞER kod_var = "E" İSE
+    kod <- GİRİŞ_AL("Kodu giriniz:")
+    İNDİRİM_KONTROL(kod)
+SON
+
+// Minimum tutar kontrolü
+toplam_tutar <- SEPET_TOPLAMI()
+EĞER toplam_tutar < 50 İSE
+    ÇIKTI "Minimum sipariş tutarı 50 TL'dir."
+    BİTİR
+SON
+
+// Kargo ücreti hesaplama
+EĞER toplam_tutar >= 200 İSE
+    kargo_ucreti <- 0
+DEĞİLSE
+    kargo_ucreti <- 29.99
+SON
+toplam_tutar <- toplam_tutar + kargo_ucreti
+
+// Ödeme yöntemi seçimi
+ÇIKTI "Ödeme yöntemi seçin: (1) Kredi Kartı, (2) Havale, (3) Kapıda Ödeme"
+odeme <- GİRİŞ_AL()
+EĞER odeme geçerli değilse
+    ÇIKTI "Geçersiz ödeme yöntemi!"
+    BİTİR
+SON
+
+// Sipariş onayı
+ÇIKTI "Sipariş toplamı: ", toplam_tutar, " TL"
+ÇIKTI "Siparişi onaylıyor musunuz? (E/H)"
+onay <- GİRİŞ_AL()
+EĞER onay = "E" İSE
+    ÇIKTI "Siparişiniz başarıyla oluşturuldu!"
+DEĞİLSE
+    ÇIKTI "Sipariş iptal edildi."
+SON
+
+BİTİR
+💡 Kısa Açıklama (5–6 cümleyle)
+Bu sistemde kullanıcı önce giriş yapar ve ardından ürün kategorileri arasında dolaşabilir.
+Seçtiği ürünleri stok durumuna göre sepete ekler.
+Sepet içeriğini görüntüleyip ürün miktarlarını değiştirebilir veya silebilir.
+İndirim kodu girildikten sonra minimum 50 TL kontrolü yapılır.
+Sipariş tutarı 200 TL’yi geçerse kargo ücretsiz olur, aksi halde ücret eklenir.
+Son olarak kullanıcı ödeme yöntemini seçip siparişini onaylar.
+İstersen bu modeli Graphviz DOT diyagramı biçiminde (oval, paralelkenar, kutu, elmaslarla) görselleştirebilirim.
+Hazırlayayım mı?
+graphiz dot diline çevirir misin
+Tabii! 🎯
+Aşağıda yukarıdaki E-ticaret sistemi pseudocode’unun tam olarak Graphviz DOT diliyle çizilmiş hali bulunuyor.
+Şekiller:
+Oval (ellipse) → Başla / Bitir
+Paralelkenar (parallelogram) → Girdi / Çıktı
+Kutu (box) → İşlem
+Elmas (diamond) → Karar / Koşul
