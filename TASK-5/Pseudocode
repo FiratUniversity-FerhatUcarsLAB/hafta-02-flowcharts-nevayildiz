@@ -1,0 +1,68 @@
+Başla
+
+// Sistem başlatma
+Sistem_Aktif = TRUE
+
+// Ana döngü: Sistem 7/24 çalışır
+WHILE Sistem_Aktif DO
+    // 1. Sensör okuma döngüsü
+    Sensörler = Oku_Tüm_Sensörler()
+    
+    // 2. Hareket sensörü kontrolü
+    IF Sensörler.HareketAlgılandı THEN
+        TehditVar = TRUE
+    ELSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 3. Kapı/pencere sensörü kontrolü
+    IF Sensörler.KapıAçık OR Sensörler.PencereAçık THEN
+        TehditVar = TRUE
+    ENDIF
+
+    // 4. Kamera aktivasyonu
+    IF TehditVar THEN
+        Kamera.Aktivasyon = TRUE
+    ELSE
+        Kamera.Aktivasyon = FALSE
+    ENDIF
+
+    // 5. Yanlış alarm kontrolü (ev sahibi evde mi?)
+    IF TehditVar THEN
+        IF EvSahibiEvde THEN
+            TehditVar = FALSE // Yanlış alarm
+        ENDIF
+    ENDIF
+
+    // 6. Alarm seviyesi belirleme
+    IF TehditVar THEN
+        IF Sensörler.HareketAlgılandı AND Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 3 // Yüksek
+        ELSEIF Sensörler.HareketAlgılandı OR Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 2 // Orta
+        ELSE
+            AlarmSeviyesi = 1 // Düşük
+        ENDIF
+    ELSE
+        AlarmSeviyesi = 0 // Tehdit yok
+    ENDIF
+
+    // 7. Bildirim gönderme
+    IF AlarmSeviyesi > 0 THEN
+        Gönder_SMS(AlarmSeviyesi)
+        Gönder_App_Notification(AlarmSeviyesi)
+        Gönder_Email(AlarmSeviyesi)
+    ENDIF
+
+    // 8. Alarm sıfırlama veya devam ettirme
+    IF AlarmSıfırlamaKomutu THEN
+        AlarmSeviyesi = 0
+        Kamera.Aktivasyon = FALSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 9. Döngü bekleme ve tekrar kontrol et
+    Bekle(1 saniye) // Döngüyü belirli bir aralıkta çalıştır
+ENDWHILE
+
+Bitir
