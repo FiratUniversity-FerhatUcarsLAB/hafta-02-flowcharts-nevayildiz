@@ -1,0 +1,106 @@
+BAŞLA
+
+    // 1. Öğrenci girişi
+    YAZDIR "Öğrenci numaranızı giriniz:"
+    ÖĞRENCİ_NO = GİRİS
+    YAZDIR "Şifrenizi giriniz:"
+    SIFRE = GİRİS
+
+    EĞER (ÖĞRENCİ_NO ve SIFRE geçerli ise) 
+        YAZDIR "Giriş başarılı."
+        
+        // 2. Ders listesini görüntüleme
+        DERS_LISTESI = Tüm dersler
+        YAZDIR "Ders Listesi:"
+        DÖNGÜ (HER DERS İÇİN DERS_LISTESI)
+            YAZDIR DERS_ADI, KREDİ, KONTENJAN, ÖN_KOŞUL, SAAT
+
+        // 3. Ders seçme döngüsü
+        SEÇİLEN_DERSLER = boş liste
+        TOPLAM_KREDİ = 0
+
+        DÖNGÜ (ÖĞRENCİ DERS SEÇMEYE DEVAM ETTİKÇE)
+            YAZDIR "Seçmek istediğiniz dersin kodunu giriniz:"
+            DERS_SEC = GİRİS
+
+            // 3.1 Kontenjan kontrolü
+            EĞER (DERS_SEC.KONTENJAN > 0) 
+                
+                // 3.2 Ön koşul dersi kontrolü
+                EĞER (DERS_SEC.ÖN_KOŞUL == NULL veya ÖĞRENCİ daha önce tamamladıysa)
+                    
+                    // 3.3 Zaman çakışması kontrolü
+                    EĞER (DERS_SEC.ZAMAN çakışmıyor SEÇİLEN_DERSLER ile)
+                        
+                        // 3.4 Kredi limiti kontrolü
+                        EĞER (TOPLAM_KREDİ + DERS_SEC.KREDİ <= 35)
+                            SEÇİLEN_DERSLER'E DERS_SEC EKLE
+                            TOPLAM_KREDİ = TOPLAM_KREDİ + DERS_SEC.KREDİ
+                            YAZDIR DERS_SEC "dersi başarıyla eklendi."
+                            
+                        DEĞİLSE
+                            YAZDIR "Kredi limiti aşımı! Ders eklenemedi."
+                        SON
+                        
+                    DEĞİLSE
+                        YAZDIR "Zaman çakışması var! Ders eklenemedi."
+                    SON
+                    
+                DEĞİLSE
+                    YAZDIR "Ön koşul dersi tamamlanmamış! Ders eklenemedi."
+                SON
+                
+            DEĞİLSE
+                YAZDIR "Kontenjan dolu! Ders eklenemedi."
+            SON
+
+            // Ders çıkarma seçeneği
+            YAZDIR "Ders çıkarmak istiyor musunuz? (E/H)"
+            CEVAP = GİRİS
+            EĞER (CEVAP == "E")
+                YAZDIR "Çıkarmak istediğiniz dersin kodunu giriniz:"
+                DERS_CIKAR = GİRİS
+                EĞER (DERS_CIKAR SEÇİLEN_DERSLER'DE VARSA)
+                    SEÇİLEN_DERSLER'DEN DERS_CIKAR ÇIKAR
+                    TOPLAM_KREDİ = TOPLAM_KREDİ - DERS_CIKAR.KREDİ
+                    YAZDIR DERS_CIKAR "dersi başarıyla çıkarıldı."
+                DEĞİLSE
+                    YAZDIR "Bu ders seçilen dersler arasında değil."
+                SON
+            SON
+
+            YAZDIR "Ders seçimine devam etmek istiyor musunuz? (E/H)"
+            DEVAM = GİRİS
+            EĞER (DEVAM == "H")
+                DÖNGÜYÜ KIR
+            SON
+        SON_DÖNGÜ
+
+        // 4. Danışman onayı kontrolü
+        GPA = ÖĞRENCİ.GPA
+        EĞER (GPA < 2.5)
+            YAZDIR "Danışman onayı gerekli. Lütfen danışmanınıza başvurunuz."
+        DEĞİLSE
+            YAZDIR "Danışman onayı gerekli değil."
+        SON
+
+        // 5. Kayıt özeti ve onay
+        YAZDIR "Seçilen Dersler:"
+        DÖNGÜ (HER DERS İÇİN SEÇİLEN_DERSLER)
+            YAZDIR DERS_ADI, KREDİ, SAAT
+        SON_DÖNGÜ
+
+        YAZDIR "Toplam Kredi: " + TOPLAM_KREDİ
+        YAZDIR "Kayıt işlemini onaylıyor musunuz? (E/H)"
+        ONAY = GİRİS
+        EĞER (ONAY == "E")
+            YAZDIR "Kayıt işleminiz başarıyla tamamlandı."
+        DEĞİLSE
+            YAZDIR "Kayıt işlemi iptal edildi."
+        SON
+
+    DEĞİLSE
+        YAZDIR "Giriş başarısız. Lütfen tekrar deneyiniz."
+    SON
+
+BITIR
