@@ -1,0 +1,104 @@
+digraph HastaneRandevuTahlil {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlangıç
+    basla [label="BAŞLA", shape=oval];
+
+    // Kimlik doğrulama
+    giris [label="Giriş: TC_Kimlik, Şifre", shape=parallelogram];
+    kontrolKimlik [label="KimlikDoğrula(TC_Kimlik, Şifre)?", shape=diamond];
+
+    // Giriş başarılı
+    basariliYazi [label="Giriş başarılı.", shape=parallelogram];
+
+    // Ana menü
+    menu [label="1 - Randevu Al\n2 - Tahlil Sonucu Görüntüle", shape=parallelogram];
+    secimKontrol [label="Seçim = 1 mi? Seçim = 2 mi?", shape=diamond];
+
+    // --- RANDEVU MODÜLÜ ---
+    // Poliklinik seçimi
+    poliYazi [label="Poliklinik listesini göster", shape=parallelogram];
+    poliSec [label="Poliklinik seçimi", shape=parallelogram];
+    poliKontrol [label="Poliklinik geçerli mi?", shape=diamond];
+
+    // Doktor seçimi
+    doktorYazi [label="Doktor listesini göster", shape=parallelogram];
+    doktorSec [label="Doktor seçimi", shape=parallelogram];
+    doktorKontrol [label="Doktor geçerli mi?", shape=diamond];
+
+    // Saat seçimi
+    saatYazi [label="Uygun saatleri göster", shape=parallelogram];
+    saatSec [label="Saat seçimi", shape=parallelogram];
+    saatKontrol [label="Saat geçerli mi?", shape=diamond];
+
+    // Randevu onayı
+    onayYazi [label="Randevuyu onaylıyor musunuz? (E/H)", shape=parallelogram];
+    onayKontrol [label="Onay = E?", shape=diamond];
+    randevuKayit [label="RandevuKaydet ve SMSGönder", shape=box];
+    randevuIptal [label="Randevu iptal edildi.", shape=parallelogram];
+
+    // --- TAHLİL MODÜLÜ ---
+    tahlilVar [label="TahlilVarMı?", shape=diamond];
+    sonucHazir [label="SonucHazirMı?", shape=diamond];
+    tahlilGor [label="Sonucu göster", shape=parallelogram];
+    pdfOnay [label="PDF indirmek ister misiniz? (E/H)", shape=parallelogram];
+    pdfKontrol [label="PDF onay = E?", shape=diamond];
+    pdfIndir [label="PDF indir", shape=box];
+    pdfHayir [label="PDF indirilmedi", shape=parallelogram];
+    tahlilBekle [label="Sonuç hazır değil, lütfen sonra tekrar deneyin.", shape=parallelogram];
+    tahlilYok [label="Tahlil bulunamadı.", shape=parallelogram];
+
+    // Kimlik başarısız
+    hataliKimlik [label="Kimlik doğrulama başarısız", shape=parallelogram];
+
+    // Bitiş
+    bitir [label="BİTİR", shape=oval];
+
+    // Bağlantılar
+    basla -> giris -> kontrolKimlik;
+    kontrolKimlik -> basariliYazi [label="Evet"];
+    kontrolKimlik -> hataliKimlik [label="Hayır"];
+    hataliKimlik -> bitir;
+
+    basariliYazi -> menu -> secimKontrol;
+    
+    // Randevu seçimi
+    secimKontrol -> poliYazi [label="Seçim = 1"];
+    secimKontrol -> tahlilVar [label="Seçim = 2"];
+    secimKontrol -> bitir [label="Diğer", style=dashed];
+
+    // Randevu akışı
+    poliYazi -> poliSec -> poliKontrol;
+    poliKontrol -> doktorYazi [label="Evet"];
+    poliKontrol -> poliSec [label="Hayır"];
+    
+    doktorYazi -> doktorSec -> doktorKontrol;
+    doktorKontrol -> saatYazi [label="Evet"];
+    doktorKontrol -> doktorSec [label="Hayır"];
+    
+    saatYazi -> saatSec -> saatKontrol;
+    saatKontrol -> onayYazi [label="Evet"];
+    saatKontrol -> saatSec [label="Hayır"];
+    
+    onayYazi -> onayKontrol -> randevuKayit [label="Evet"];
+    onayKontrol -> randevuIptal [label="Hayır"];
+    
+    randevuKayit -> bitir;
+    randevuIptal -> bitir;
+
+    // Tahlil akışı
+    tahlilVar -> sonucHazir [label="Evet"];
+    tahlilVar -> tahlilYok [label="Hayır"];
+    tahlilYok -> bitir;
+
+    sonucHazir -> tahlilGor [label="Evet"];
+    sonucHazir -> tahlilBekle [label="Hayır"];
+    tahlilBekle -> bitir;
+
+    tahlilGor -> pdfOnay -> pdfKontrol;
+    pdfKontrol -> pdfIndir [label="Evet"];
+    pdfKontrol -> pdfHayir [label="Hayır"];
+    pdfIndir -> bitir;
+    pdfHayir -> bitir;
+}
