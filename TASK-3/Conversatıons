@@ -1,0 +1,415 @@
+“Hastane randevu sistemi için algoritma: kimlik doğrulama, poliklinik
+seçimi, doktor listesi görüntüleme, uygun saatleri gösterme, randevu
+onaylama ve SMS gönderme.  Poliklinik seçimi, doktor listesi, uygun saatler (Döngü)
+ “Tahlil sonucu görüntüleme sistemi: kimlik doğrulama, tahlil varlığı kontrolü, sonuç hazır mı kontrolü, görüntüleme veya bekleme mesajı, PDF indirme. Bu iki sistemi birleştirerek Pseudocode yaz.
+Aşağıda “Hastane Randevu ve Tahlil Sonucu Görüntüleme Sistemi” için birleşik ve detaylı pseudocode verilmiştir.
+Bu algoritma hem randevu alma sürecini hem de tahlil sonucu sorgulama sürecini tek bir akışta ele alır.
+Döngüler ve koşullar, sistemin dinamik kontrolünü sağlar.
+BAŞLA
+
+    // Kullanıcı kimlik doğrulama
+    GİRİŞ: TC_Kimlik, Şifre
+    EĞER KimlikDoğrula(TC_Kimlik, Şifre) = DOĞRU İSE
+        YAZ "Giriş başarılı."
+        
+        // Ana menü seçimi
+        YAZ "Lütfen yapmak istediğiniz işlemi seçin:"
+        YAZ "1 - Randevu Al"
+        YAZ "2 - Tahlil Sonucu Görüntüle"
+        GİRİŞ: secim
+
+        EĞER secim = 1 İSE
+            // --- RANDEVU SİSTEMİ ---
+            TEKRARLA
+                YAZ "Poliklinik listesini görüntülüyorsunuz."
+                poliklinikListesi = PoliklinikleriGetir()
+                YAZ poliklinikListesi
+                GİRİŞ: poliklinikSec
+            DOĞRU DEĞİLSE
+                YAZ "Geçersiz seçim."
+            KADAR poliklinikSec GEÇERLİ OLANA KADAR
+
+            // Doktor seçimi
+            TEKRARLA
+                doktorListesi = DoktorlariGetir(poliklinikSec)
+                YAZ doktorListesi
+                GİRİŞ: doktorSec
+            DOĞRU DEĞİLSE
+                YAZ "Geçersiz doktor seçimi."
+            KADAR doktorSec GEÇERLİ OLANA KADAR
+
+            // Uygun saat seçimi
+            TEKRARLA
+                uygunSaatler = UygunSaatleriGetir(doktorSec)
+                YAZ uygunSaatler
+                GİRİŞ: saatSec
+            DOĞRU DEĞİLSE
+                YAZ "Seçtiğiniz saat uygun değil."
+            KADAR saatSec GEÇERLİ OLANA KADAR
+
+            // Randevu onaylama
+            YAZ "Randevuyu onaylıyor musunuz? (E/H)"
+            GİRİŞ: onay
+            EĞER onay = "E" İSE
+                RandevuKaydet(TC_Kimlik, doktorSec, saatSec)
+                SMSGönder(TC_Kimlik, "Randevunuz başarıyla oluşturuldu.")
+                YAZ "Randevunuz onaylandı ve SMS gönderildi."
+            DEĞİLSE
+                YAZ "Randevu iptal edildi."
+            BİTİR EĞER
+
+        DEĞİLSE EĞER secim = 2 İSE
+            // --- TAHLİL SONUCU SİSTEMİ ---
+            EĞER TahlilVarMı(TC_Kimlik) = DOĞRU İSE
+                EĞER SonucHazirMı(TC_Kimlik) = DOĞRU İSE
+                    YAZ "Tahlil sonucunuz hazır."
+                    GörüntüleSonuc(TC_Kimlik)
+                    YAZ "PDF indirmek ister misiniz? (E/H)"
+                    GİRİŞ: pdfOnay
+                    EĞER pdfOnay = "E" İSE
+                        PDFIndir(TC_Kimlik)
+                        YAZ "PDF indirildi."
+                    DEĞİLSE
+                        YAZ "PDF indirilmedi."
+                    BİTİR EĞER
+                DEĞİLSE
+                    YAZ "Tahlil sonucu henüz hazır değil, lütfen daha sonra tekrar deneyin."
+                BİTİR EĞER
+            DEĞİLSE
+                YAZ "Kayıtlı tahlil bulunamadı."
+            BİTİR EĞER
+        
+        DEĞİLSE
+            YAZ "Geçersiz seçim."
+        BİTİR EĞER
+
+    DEĞİLSE
+        YAZ "Kimlik doğrulama başarısız. Lütfen tekrar deneyin."
+    BİTİR EĞER
+
+BİTİR
+🔍 Kısaca Açıklama:
+Bu birleşik sistemde:
+Kullanıcı kimlik doğrulaması yaparak giriş yapar.
+Ana menüden randevu alma veya tahlil sonucu görüntüleme seçeneklerinden birini seçer.
+Randevu alma aşamasında, poliklinik → doktor → saat seçimi döngüsel bir yapıyla kontrol edilir.
+Randevu onaylanırsa SMS gönderimi yapılır.
+Tahlil modunda, sistem tahlil varlığı ve sonucun hazır olup olmadığını kontrol eder; sonuç varsa görüntüleme ve PDF indirme seçenekleri sunar.
+Aşağıda **“Hastane Randevu ve Tahlil Sonucu Görüntüleme Sistemi”** için birleşik ve detaylı **pseudocode** verilmiştir.
+Bu algoritma hem **randevu alma sürecini** hem de **tahlil sonucu sorgulama sürecini** tek bir akışta ele alır.
+Döngüler ve koşullar, sistemin dinamik kontrolünü sağlar.
+Aşağıda **“Hastane Randevu ve Tahlil Sonucu Görüntüleme Sistemi”** için birleşik ve detaylı **pseudocode** verilmiştir.
+Bu algoritma hem **randevu alma sürecini** hem de **tahlil sonucu sorgulama sürecini** tek bir akışta ele alır.
+Döngüler ve koşullar, sistemin dinamik kontrolünü sağlar.
+
+---
+
+### 🏥 **Pseudocode: Hastane Randevu ve Tahlil Sonucu Görüntüleme Sistemi**
+
+```
+BAŞLA
+
+    // Kullanıcı kimlik doğrulama
+    GİRİŞ: TC_Kimlik, Şifre
+    EĞER KimlikDoğrula(TC_Kimlik, Şifre) = DOĞRU İSE
+        YAZ "Giriş başarılı."
+        
+        // Ana menü seçimi
+        YAZ "Lütfen yapmak istediğiniz işlemi seçin:"
+        YAZ "1 - Randevu Al"
+        YAZ "2 - Tahlil Sonucu Görüntüle"
+        GİRİŞ: secim
+
+        EĞER secim = 1 İSE
+            // --- RANDEVU SİSTEMİ ---
+            TEKRARLA
+                YAZ "Poliklinik listesini görüntülüyorsunuz."
+                poliklinikListesi = PoliklinikleriGetir()
+                YAZ poliklinikListesi
+                GİRİŞ: poliklinikSec
+            DOĞRU DEĞİLSE
+                YAZ "Geçersiz seçim."
+            KADAR poliklinikSec GEÇERLİ OLANA KADAR
+
+            // Doktor seçimi
+            TEKRARLA
+                doktorListesi = DoktorlariGetir(poliklinikSec)
+                YAZ doktorListesi
+                GİRİŞ: doktorSec
+            DOĞRU DEĞİLSE
+                YAZ "Geçersiz doktor seçimi."
+            KADAR doktorSec GEÇERLİ OLANA KADAR
+
+            // Uygun saat seçimi
+            TEKRARLA
+                uygunSaatler = UygunSaatleriGetir(doktorSec)
+                YAZ uygunSaatler
+                GİRİŞ: saatSec
+            DOĞRU DEĞİLSE
+                YAZ "Seçtiğiniz saat uygun değil."
+            KADAR saatSec GEÇERLİ OLANA KADAR
+
+            // Randevu onaylama
+            YAZ "Randevuyu onaylıyor musunuz? (E/H)"
+            GİRİŞ: onay
+            EĞER onay = "E" İSE
+                RandevuKaydet(TC_Kimlik, doktorSec, saatSec)
+                SMSGönder(TC_Kimlik, "Randevunuz başarıyla oluşturuldu.")
+                YAZ "Randevunuz onaylandı ve SMS gönderildi."
+            DEĞİLSE
+                YAZ "Randevu iptal edildi."
+            BİTİR EĞER
+
+        DEĞİLSE EĞER secim = 2 İSE
+            // --- TAHLİL SONUCU SİSTEMİ ---
+            EĞER TahlilVarMı(TC_Kimlik) = DOĞRU İSE
+                EĞER SonucHazirMı(TC_Kimlik) = DOĞRU İSE
+                    YAZ "Tahlil sonucunuz hazır."
+                    GörüntüleSonuc(TC_Kimlik)
+                    YAZ "PDF indirmek ister misiniz? (E/H)"
+                    GİRİŞ: pdfOnay
+                    EĞER pdfOnay = "E" İSE
+                        PDFIndir(TC_Kimlik)
+                        YAZ "PDF indirildi."
+                    DEĞİLSE
+                        YAZ "PDF indirilmedi."
+                    BİTİR EĞER
+                DEĞİLSE
+                    YAZ "Tahlil sonucu henüz hazır değil, lütfen daha sonra tekrar deneyin."
+                BİTİR EĞER
+            DEĞİLSE
+                YAZ "Kayıtlı tahlil bulunamadı."
+            BİTİR EĞER
+        
+        DEĞİLSE
+            YAZ "Geçersiz seçim."
+        BİTİR EĞER
+
+    DEĞİLSE
+        YAZ "Kimlik doğrulama başarısız. Lütfen tekrar deneyin."
+    BİTİR EĞER
+
+BİTİR
+```
+
+---
+
+### 🔍 **Kısaca Açıklama:**
+
+Bu birleşik sistemde:
+
+* Kullanıcı **kimlik doğrulaması** yaparak giriş yapar.
+* Ana menüden **randevu alma** veya **tahlil sonucu görüntüleme** seçeneklerinden birini seçer.
+* Randevu alma aşamasında, **poliklinik → doktor → saat seçimi** döngüsel bir yapıyla kontrol edilir.
+* Randevu onaylanırsa **SMS gönderimi** yapılır.
+* Tahlil modunda, sistem **tahlil varlığı** ve **sonucun hazır olup olmadığını** kontrol eder; sonuç varsa **görüntüleme** ve **PDF indirme** seçenekleri sunar.
+
+---
+
+İstersen bu pseudocode’u sana **Graphviz DOT diyagramına** da çevirebilirim (akış diyagramı şeklinde).
+Bunu ister misin?
+    bunu dot diline çevirir misin
+Tabii! İlk verdiğim, Randevu ve Tahlil Sonucu Sistemi birleşik pseudocode’unu Graphviz DOT diline çevirelim.
+Oval = Başla/Bitir, Paralelkenar = Girdi/Çıktı, Dikdörtgen = İşlem, Elmas = Karar.
+digraph HastaneRandevuTahlil {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlangıç
+    basla [label="BAŞLA", shape=oval];
+
+    // Kimlik doğrulama
+    giris [label="Giriş: TC_Kimlik, Şifre", shape=parallelogram];
+    kontrolKimlik [label="KimlikDoğrula(TC_Kimlik, Şifre)?", shape=diamond];
+
+    // Giriş başarılı
+    basariliYazi [label="Giriş başarılı.", shape=parallelogram];
+
+    // Ana menü
+    menu [label="1 - Randevu Al\n2 - Tahlil Sonucu Görüntüle", shape=parallelogram];
+    secimKontrol [label="Seçim = 1 mi? Seçim = 2 mi?", shape=diamond];
+
+    // --- RANDEVU MODÜLÜ ---
+    // Poliklinik seçimi
+    poliYazi [label="Poliklinik listesini göster", shape=parallelogram];
+    poliSec [label="Poliklinik seçimi", shape=parallelogram];
+    poliKontrol [label="Poliklinik geçerli mi?", shape=diamond];
+
+    // Doktor seçimi
+    doktorYazi [label="Doktor listesini göster", shape=parallelogram];
+    doktorSec [label="Doktor seçimi", shape=parallelogram];
+    doktorKontrol [label="Doktor geçerli mi?", shape=diamond];
+
+    // Saat seçimi
+    saatYazi [label="Uygun saatleri göster", shape=parallelogram];
+    saatSec [label="Saat seçimi", shape=parallelogram];
+    saatKontrol [label="Saat geçerli mi?", shape=diamond];
+
+    // Randevu onayı
+    onayYazi [label="Randevuyu onaylıyor musunuz? (E/H)", shape=parallelogram];
+    onayKontrol [label="Onay = E?", shape=diamond];
+    randevuKayit [label="RandevuKaydet ve SMSGönder", shape=box];
+    randevuIptal [label="Randevu iptal edildi.", shape=parallelogram];
+
+    // --- TAHLİL MODÜLÜ ---
+    tahlilVar [label="TahlilVarMı?", shape=diamond];
+    sonucHazir [label="SonucHazirMı?", shape=diamond];
+    tahlilGor [label="Sonucu göster", shape=parallelogram];
+    pdfOnay [label="PDF indirmek ister misiniz? (E/H)", shape=parallelogram];
+    pdfKontrol [label="PDF onay = E?", shape=diamond];
+    pdfIndir [label="PDF indir", shape=box];
+    pdfHayir [label="PDF indirilmedi", shape=parallelogram];
+    tahlilBekle [label="Sonuç hazır değil, lütfen sonra tekrar deneyin.", shape=parallelogram];
+    tahlilYok [label="Tahlil bulunamadı.", shape=parallelogram];
+
+    // Kimlik başarısız
+    hataliKimlik [label="Kimlik doğrulama başarısız", shape=parallelogram];
+
+    // Bitiş
+    bitir [label="BİTİR", shape=oval];
+
+    // Bağlantılar
+    basla -> giris -> kontrolKimlik;
+    kontrolKimlik -> basariliYazi [label="Evet"];
+    kontrolKimlik -> hataliKimlik [label="Hayır"];
+    hataliKimlik -> bitir;
+
+    basariliYazi -> menu -> secimKontrol;
+    
+    // Randevu seçimi
+    secimKontrol -> poliYazi [label="Seçim = 1"];
+    secimKontrol -> tahlilVar [label="Seçim = 2"];
+    secimKontrol -> bitir [label="Diğer", style=dashed];
+
+    // Randevu akışı
+    poliYazi -> poliSec -> poliKontrol;
+    poliKontrol -> doktorYazi [label="Evet"];
+    poliKontrol -> poliSec [label="Hayır"];
+    
+    doktorYazi -> doktorSec -> doktorKontrol;
+    doktorKontrol -> saatYazi [label="Evet"];
+    doktorKontrol -> doktorSec [label="Hayır"];
+    
+    saatYazi -> saatSec -> saatKontrol;
+    saatKontrol -> onayYazi [label="Evet"];
+    saatKontrol -> saatSec [label="Hayır"];
+    
+    onayYazi -> onayKontrol -> randevuKayit [label="Evet"];
+    onayKontrol -> randevuIptal [label="Hayır"];
+    
+    randevuKayit -> bitir;
+    randevuIptal -> bitir;
+
+    // Tahlil akışı
+    tahlilVar -> sonucHazir [label="Evet"];
+    tahlilVar -> tahlilYok [label="Hayır"];
+    tahlilYok -> bitir;
+
+    sonucHazir -> tahlilGor [label="Evet"];
+    sonucHazir -> tahlilBekle [label="Hayır"];
+    tahlilBekle -> bitir;
+
+    tahlilGor -> pdfOnay -> pdfKontrol;
+    pdfKontrol -> pdfIndir [label="Evet"];
+    pdfKontrol -> pdfHayir [label="Hayır"];
+    pdfIndir -> bitir;
+    pdfHayir -> bitir;
+}
+bu dot diline döngüleri de ekleyerek tekrardan bir dot dili yazar mısın
+digraph HastaneRandevuTahlilLoop {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlangıç
+    basla [label="BAŞLA", shape=oval];
+
+    // Kimlik doğrulama
+    giris [label="Giriş: TC_Kimlik, Şifre", shape=parallelogram];
+    kontrolKimlik [label="KimlikDoğrula(TC_Kimlik, Şifre)?", shape=diamond];
+
+    basariliYazi [label="Giriş başarılı.", shape=parallelogram];
+    hataliKimlik [label="Kimlik doğrulama başarısız", shape=parallelogram];
+
+    // Ana menü
+    menu [label="1 - Randevu Al\n2 - Tahlil Sonucu Görüntüle", shape=parallelogram];
+    secimKontrol [label="Seçim = 1 mi? Seçim = 2 mi?", shape=diamond];
+
+    // --- RANDEVU MODÜLÜ ---
+    poliYazi [label="Poliklinik listesini göster", shape=parallelogram];
+    poliSec [label="Poliklinik seçimi", shape=parallelogram];
+    poliKontrol [label="Poliklinik geçerli mi?", shape=diamond];
+
+    doktorYazi [label="Doktor listesini göster", shape=parallelogram];
+    doktorSec [label="Doktor seçimi", shape=parallelogram];
+    doktorKontrol [label="Doktor geçerli mi?", shape=diamond];
+
+    saatYazi [label="Uygun saatleri göster", shape=parallelogram];
+    saatSec [label="Saat seçimi", shape=parallelogram];
+    saatKontrol [label="Saat geçerli mi?", shape=diamond];
+
+    onayYazi [label="Randevuyu onaylıyor musunuz? (E/H)", shape=parallelogram];
+    onayKontrol [label="Onay = E?", shape=diamond];
+    randevuKayit [label="RandevuKaydet ve SMSGönder", shape=box];
+    randevuIptal [label="Randevu iptal edildi.", shape=parallelogram];
+
+    // --- TAHLİL MODÜLÜ ---
+    tahlilVar [label="TahlilVarMı?", shape=diamond];
+    sonucHazir [label="SonucHazirMı?", shape=diamond];
+    tahlilGor [label="Sonucu göster", shape=parallelogram];
+    pdfOnay [label="PDF indirmek ister misiniz? (E/H)", shape=parallelogram];
+    pdfKontrol [label="PDF onay = E?", shape=diamond];
+    pdfIndir [label="PDF indir", shape=box];
+    pdfHayir [label="PDF indirilmedi", shape=parallelogram];
+    tahlilBekle [label="Sonuç hazır değil, lütfen sonra tekrar deneyin.", shape=parallelogram];
+    tahlilYok [label="Tahlil bulunamadı.", shape=parallelogram];
+
+    bitir [label="BİTİR", shape=oval];
+
+    // --- BAĞLANTILAR ---
+
+    basla -> giris -> kontrolKimlik;
+    kontrolKimlik -> basariliYazi [label="Evet"];
+    kontrolKimlik -> hataliKimlik [label="Hayır"];
+    hataliKimlik -> bitir;
+
+    basariliYazi -> menu -> secimKontrol;
+
+    // Randevu seçimi
+    secimKontrol -> poliYazi [label="Seçim = 1"];
+    secimKontrol -> tahlilVar [label="Seçim = 2"];
+    secimKontrol -> bitir [label="Diğer", style=dashed];
+
+    // --- RANDEVU AKIŞI DÖNGÜLERLE ---
+    poliYazi -> poliSec -> poliKontrol;
+    poliKontrol -> doktorYazi [label="Evet"];
+    poliKontrol -> poliSec [label="Hayır", color=red]; // Döngü geri
+
+    doktorYazi -> doktorSec -> doktorKontrol;
+    doktorKontrol -> saatYazi [label="Evet"];
+    doktorKontrol -> doktorSec [label="Hayır", color=red]; // Döngü geri
+
+    saatYazi -> saatSec -> saatKontrol;
+    saatKontrol -> onayYazi [label="Evet"];
+    saatKontrol -> saatSec [label="Hayır", color=red]; // Döngü geri
+
+    onayYazi -> onayKontrol -> randevuKayit [label="Evet"];
+    onayKontrol -> randevuIptal [label="Hayır"];
+
+    randevuKayit -> bitir;
+    randevuIptal -> bitir;
+
+    // --- TAHLİL AKIŞI ---
+    tahlilVar -> sonucHazir [label="Evet"];
+    tahlilVar -> tahlilYok [label="Hayır"];
+    tahlilYok -> bitir;
+
+    sonucHazir -> tahlilGor [label="Evet"];
+    sonucHazir -> tahlilBekle [label="Hayır"];
+    tahlilBekle -> bitir;
+
+    tahlilGor -> pdfOnay -> pdfKontrol;
+    pdfKontrol -> pdfIndir [label="Evet"];
+    pdfKontrol -> pdfHayir [label="Hayır"];
+    pdfIndir -> bitir;
+    pdfHayir -> bitir;
+}
