@@ -1,0 +1,66 @@
+digraph AkilliEvGuvenlik {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlat
+    Basla [label="Başla", shape=oval];
+
+    // Sistem aktif mi kontrolü
+    SistemAktif [label="Sistem Aktif mi?", shape=diamond];
+
+    // Sensör okuma döngüsü
+    SensorOku [label="Tüm sensörleri oku"];
+
+    // Hareket sensörü kontrolü
+    HareketKontrol [label="Hareket sensörü algıladı mı?", shape=diamond];
+
+    // Kapı/pencere sensörü kontrolü
+    KapiPencereKontrol [label="Kapı/Pencere açık mı?", shape=diamond];
+
+    // Kamera aktivasyonu
+    KameraAktivasyon [label="Kamera aktivasyonu"];
+
+    // Yanlış alarm kontrolü
+    YanlisAlarm [label="Ev sahibi evde mi?", shape=diamond];
+
+    // Alarm seviyesi belirleme
+    AlarmSeviyesi [label="Alarm seviyesi belirle (1-3)", shape=diamond];
+
+    // Bildirim gönderme
+    Bildirim [label="SMS, App, Email gönder"];
+
+    // Alarm sıfırlama veya devam ettirme
+    AlarmSifirla [label="Alarm sıfırlama komutu geldi mi?", shape=diamond];
+
+    // Bekle ve tekrar döngü
+    Bekle [label="Bekle 1 saniye"];
+
+    // Bitir
+    Bitir [label="Bitir", shape=oval];
+
+    // Kenarlar
+    Basla -> SistemAktif;
+    SistemAktif -> SensorOku [label="Evet"];
+    SistemAktif -> Bitir [label="Hayır"];
+
+    SensorOku -> HareketKontrol;
+    HareketKontrol -> KapiPencereKontrol [label="Evet"];
+    HareketKontrol -> KapiPencereKontrol [label="Hayır"];
+
+    KapiPencereKontrol -> KameraAktivasyon [label="Evet"];
+    KapiPencereKontrol -> KameraAktivasyon [label="Hayır"];
+
+    KameraAktivasyon -> YanlisAlarm;
+    YanlisAlarm -> AlarmSeviyesi [label="Hayır"];
+    YanlisAlarm -> Bekle [label="Evet"];
+
+    AlarmSeviyesi -> Bildirim [label="Seviye > 0"];
+    AlarmSeviyesi -> Bekle [label="Seviye = 0"];
+
+    Bildirim -> AlarmSifirla;
+    AlarmSifirla -> Bekle [label="Hayır"];
+    AlarmSifirla -> AlarmSeviyesi [label="Evet, sıfırla"];
+
+    Bekle -> SensorOku [label="Sürekli"];
+
+}
