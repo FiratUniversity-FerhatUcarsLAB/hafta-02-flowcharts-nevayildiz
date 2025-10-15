@@ -1,0 +1,365 @@
+IoT tabanlı akıllı ev güvenlik sisteminin alarm ve bildirim süreçlerini
+modelleyin.
+Sistem Gereksinimleri:
+Sistem aktif mi kontrolü (koşul)
+Sensör okuma döngüsü (döngü - sürekli)
+Hareket sensörü kontrolü (koşul)
+Kapı/pencere sensörü kontrolü (koşul)
+Kamera aktivasyonu (koşul)
+Yanlış alarm kontrolü (ev sahibi evde mi?) (koşul)
+Alarm seviyesi belirleme (1-düşük, 2-orta, 3-yüksek) (koşul)
+Bildirim gönderme (SMS + App + Email)
+Bekle ve tekrar kontrol et (döngü)
+Alarm sıfırlama veya devam ettirme (koşul)
+“Akıllı ev güvenlik sistemi 7/24 çalışır. Ana döngü içinde sensör okuma,
+tehdit algılama, alarm verme ve bildirim gönderme sürçlerini içeren
+pseudocode u 
+Ana DONGU sürekli çalışır (DOGRU koşulu ile)
+Her döngü iterasyonunda tüm sensörler kontrol edilir
+Tehdit seviyesine göre farklı aksiyonlar alınır
+Alarm sıfırlama komutu gelene kadar devam eder
+özel durumlarına göre yaz
+Tabii! Verdiğiniz gereksinimlere uygun olarak IoT tabanlı akıllı ev güvenlik sistemi için detaylı bir pseudocode hazırlayabiliriz. Sistem sürekli çalışıyor, sensörleri kontrol ediyor, alarm seviyesini belirliyor ve bildirim gönderiyor. İşte örnek pseudocode:
+Başla
+
+// Sistem başlatma
+Sistem_Aktif = TRUE
+
+// Ana döngü: Sistem 7/24 çalışır
+WHILE Sistem_Aktif DO
+    // 1. Sensör okuma döngüsü
+    Sensörler = Oku_Tüm_Sensörler()
+    
+    // 2. Hareket sensörü kontrolü
+    IF Sensörler.HareketAlgılandı THEN
+        TehditVar = TRUE
+    ELSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 3. Kapı/pencere sensörü kontrolü
+    IF Sensörler.KapıAçık OR Sensörler.PencereAçık THEN
+        TehditVar = TRUE
+    ENDIF
+
+    // 4. Kamera aktivasyonu
+    IF TehditVar THEN
+        Kamera.Aktivasyon = TRUE
+    ELSE
+        Kamera.Aktivasyon = FALSE
+    ENDIF
+
+    // 5. Yanlış alarm kontrolü (ev sahibi evde mi?)
+    IF TehditVar THEN
+        IF EvSahibiEvde THEN
+            TehditVar = FALSE // Yanlış alarm
+        ENDIF
+    ENDIF
+
+    // 6. Alarm seviyesi belirleme
+    IF TehditVar THEN
+        IF Sensörler.HareketAlgılandı AND Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 3 // Yüksek
+        ELSEIF Sensörler.HareketAlgılandı OR Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 2 // Orta
+        ELSE
+            AlarmSeviyesi = 1 // Düşük
+        ENDIF
+    ELSE
+        AlarmSeviyesi = 0 // Tehdit yok
+    ENDIF
+
+    // 7. Bildirim gönderme
+    IF AlarmSeviyesi > 0 THEN
+        Gönder_SMS(AlarmSeviyesi)
+        Gönder_App_Notification(AlarmSeviyesi)
+        Gönder_Email(AlarmSeviyesi)
+    ENDIF
+
+    // 8. Alarm sıfırlama veya devam ettirme
+    IF AlarmSıfırlamaKomutu THEN
+        AlarmSeviyesi = 0
+        Kamera.Aktivasyon = FALSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 9. Döngü bekleme ve tekrar kontrol et
+    Bekle(1 saniye) // Döngüyü belirli bir aralıkta çalıştır
+ENDWHILE
+
+Bitir
+Sistem Akışı Açıklaması
+Sistem 7/24 çalışır ve ana döngü içinde sensörleri sürekli okur.
+Hareket ve kapı/pencere sensörleri kontrol edilerek tehdit belirlenir.
+Kamera, yalnızca tehdit algılandığında aktif edilir.
+Yanlış alarm, ev sahibi evdeyse otomatik olarak engellenir.
+Tehdit seviyesine göre alarm 1-3 arasında belirlenir.
+Alarm oluştuğunda SMS, App ve Email bildirimleri gönderilir.
+Alarm sıfırlama komutu gelene kadar alarm aktif kalır.
+Döngü belirli aralıklarla sensörleri tekrar kontrol eder.
+Tabii! Verdiğiniz gereksinimlere uygun olarak **IoT tabanlı akıllı ev güvenlik sistemi** için detaylı bir pseudocode hazırlayabiliriz. Sistem sürekli çalışıyor, sensörleri kontrol ediyor, alarm seviyesini belirliyor ve bildirim gönderiyor. İşte örnek pseudocode:
+
+---
+
+### **Akıllı Ev Güvenlik Sistemi Pseudocode**
+
+```
+Başla
+
+// Sistem başlatma
+Sistem_Aktif = TRUE
+
+// Ana döngü: Sistem 7/24 çalışır
+WHILE Sistem_Aktif DO
+    // 1. Sensör okuma döngüsü
+    Sensörler = Oku_Tüm_Sensörler()
+    
+    // 2. Hareket sensörü kontrolü
+    IF Sensörler.HareketAlgılandı THEN
+        TehditVar = TRUE
+    ELSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 3. Kapı/pencere sensörü kontrolü
+    IF Sensörler.KapıAçık OR Sensörler.PencereAçık THEN
+        TehditVar = TRUE
+    ENDIF
+
+    // 4. Kamera aktivasyonu
+    IF TehditVar THEN
+        Kamera.Aktivasyon = TRUE
+    ELSE
+        Kamera.Aktivasyon = FALSE
+    ENDIF
+
+    // 5. Yanlış alarm kontrolü (ev sahibi evde mi?)
+    IF TehditVar THEN
+        IF EvSahibiEvde THEN
+            TehditVar = FALSE // Yanlış alarm
+        ENDIF
+    ENDIF
+
+    // 6. Alarm seviyesi belirleme
+    IF TehditVar THEN
+        IF Sensörler.HareketAlgılandı AND Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 3 // Yüksek
+        ELSEIF Sensörler.HareketAlgılandı OR Sensörler.KapıAçık THEN
+            AlarmSeviyesi = 2 // Orta
+        ELSE
+            AlarmSeviyesi = 1 // Düşük
+        ENDIF
+    ELSE
+        AlarmSeviyesi = 0 // Tehdit yok
+    ENDIF
+
+    // 7. Bildirim gönderme
+    IF AlarmSeviyesi > 0 THEN
+        Gönder_SMS(AlarmSeviyesi)
+        Gönder_App_Notification(AlarmSeviyesi)
+        Gönder_Email(AlarmSeviyesi)
+    ENDIF
+
+    // 8. Alarm sıfırlama veya devam ettirme
+    IF AlarmSıfırlamaKomutu THEN
+        AlarmSeviyesi = 0
+        Kamera.Aktivasyon = FALSE
+        TehditVar = FALSE
+    ENDIF
+
+    // 9. Döngü bekleme ve tekrar kontrol et
+    Bekle(1 saniye) // Döngüyü belirli bir aralıkta çalıştır
+ENDWHILE
+
+Bitir
+```
+
+---
+
+### **Sistem Akışı Açıklaması**
+
+1. Sistem 7/24 çalışır ve ana döngü içinde sensörleri sürekli okur.
+2. Hareket ve kapı/pencere sensörleri kontrol edilerek tehdit belirlenir.
+3. Kamera, yalnızca tehdit algılandığında aktif edilir.
+4. Yanlış alarm, ev sahibi evdeyse otomatik olarak engellenir.
+5. Tehdit seviyesine göre alarm 1-3 arasında belirlenir.
+6. Alarm oluştuğunda SMS, App ve Email bildirimleri gönderilir.
+7. Alarm sıfırlama komutu gelene kadar alarm aktif kalır.
+8. Döngü belirli aralıklarla sensörleri tekrar kontrol eder.
+
+---
+
+İstersen ben bunu bir adım daha ileri götürüp **Graphviz DOT dili ile akış diyagramı** hâline de getirebilirim.
+Bunu yapmamı ister misin?
+Bu psseudocode u DOT diline çevir ve DOT dilinde sonsuz döngüyü göstermek için geri ok kullan ve ”Sürekli” etiketi ekle
+Tamam! Verdiğiniz pseudocode’u Graphviz DOT dili formatına çevireceğim. Başla/Bitir için oval, işlem için box, kararlar için diamond, döngü ve geri oklar ile “Sürekli” etiketi kullanacağım.
+digraph AkilliEvGuvenlik {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlat
+    Basla [label="Başla", shape=oval];
+
+    // Sistem aktif mi kontrolü
+    SistemAktif [label="Sistem Aktif mi?", shape=diamond];
+
+    // Sensör okuma döngüsü
+    SensorOku [label="Tüm sensörleri oku"];
+
+    // Hareket sensörü kontrolü
+    HareketKontrol [label="Hareket sensörü algıladı mı?", shape=diamond];
+
+    // Kapı/pencere sensörü kontrolü
+    KapiPencereKontrol [label="Kapı/Pencere açık mı?", shape=diamond];
+
+    // Kamera aktivasyonu
+    KameraAktivasyon [label="Kamera aktivasyonu"];
+
+    // Yanlış alarm kontrolü
+    YanlisAlarm [label="Ev sahibi evde mi?", shape=diamond];
+
+    // Alarm seviyesi belirleme
+    AlarmSeviyesi [label="Alarm seviyesi belirle (1-3)", shape=diamond];
+
+    // Bildirim gönderme
+    Bildirim [label="SMS, App, Email gönder"];
+
+    // Alarm sıfırlama veya devam ettirme
+    AlarmSifirla [label="Alarm sıfırlama komutu geldi mi?", shape=diamond];
+
+    // Bekle ve tekrar döngü
+    Bekle [label="Bekle 1 saniye"];
+
+    // Bitir
+    Bitir [label="Bitir", shape=oval];
+
+    // Kenarlar
+    Basla -> SistemAktif;
+    SistemAktif -> SensorOku [label="Evet"];
+    SistemAktif -> Bitir [label="Hayır"];
+
+    SensorOku -> HareketKontrol;
+    HareketKontrol -> KapiPencereKontrol [label="Evet"];
+    HareketKontrol -> KapiPencereKontrol [label="Hayır"];
+
+    KapiPencereKontrol -> KameraAktivasyon [label="Evet"];
+    KapiPencereKontrol -> KameraAktivasyon [label="Hayır"];
+
+    KameraAktivasyon -> YanlisAlarm;
+    YanlisAlarm -> AlarmSeviyesi [label="Hayır"];
+    YanlisAlarm -> Bekle [label="Evet"];
+
+    AlarmSeviyesi -> Bildirim [label="Seviye > 0"];
+    AlarmSeviyesi -> Bekle [label="Seviye = 0"];
+
+    Bildirim -> AlarmSifirla;
+    AlarmSifirla -> Bekle [label="Hayır"];
+    AlarmSifirla -> AlarmSeviyesi [label="Evet, sıfırla"];
+
+    Bekle -> SensorOku [label="Sürekli"];
+
+}
+Açıklama:
+Ana döngü Sensör okuma → Kontroller → Alarm/Bildirim → Bekle → Sensör okuma şeklinde “Sürekli” geri ok ile gösterildi.
+Karar noktaları diamond, işlemler box, başlangıç ve bitiş oval ile temsil edildi.
+Yanlış alarm durumu ve alarm sıfırlama kontrolü dahil edildi.
+Tamam! Verdiğiniz pseudocode’u **Graphviz DOT dili** formatına çevireceğim. Başla/Bitir için oval, işlem için box, kararlar için diamond, döngü ve geri oklar ile “Sürekli” etiketi kullanacağım.
+
+---
+
+```dot
+digraph AkilliEvGuvenlik {
+    rankdir=TB;
+    node [shape=box];
+
+    // Başlat
+    Basla [label="Başla", shape=oval];
+
+    // Sistem aktif mi kontrolü
+    SistemAktif [label="Sistem Aktif mi?", shape=diamond];
+
+    // Sensör okuma döngüsü
+    SensorOku [label="Tüm sensörleri oku"];
+
+    // Hareket sensörü kontrolü
+    HareketKontrol [label="Hareket sensörü algıladı mı?", shape=diamond];
+
+    // Kapı/pencere sensörü kontrolü
+    KapiPencereKontrol [label="Kapı/Pencere açık mı?", shape=diamond];
+
+    // Kamera aktivasyonu
+    KameraAktivasyon [label="Kamera aktivasyonu"];
+
+    // Yanlış alarm kontrolü
+    YanlisAlarm [label="Ev sahibi evde mi?", shape=diamond];
+
+    // Alarm seviyesi belirleme
+    AlarmSeviyesi [label="Alarm seviyesi belirle (1-3)", shape=diamond];
+
+    // Bildirim gönderme
+    Bildirim [label="SMS, App, Email gönder"];
+
+    // Alarm sıfırlama veya devam ettirme
+    AlarmSifirla [label="Alarm sıfırlama komutu geldi mi?", shape=diamond];
+
+    // Bekle ve tekrar döngü
+    Bekle [label="Bekle 1 saniye"];
+
+    // Bitir
+    Bitir [label="Bitir", shape=oval];
+
+    // Kenarlar
+    Basla -> SistemAktif;
+    SistemAktif -> SensorOku [label="Evet"];
+    SistemAktif -> Bitir [label="Hayır"];
+
+    SensorOku -> HareketKontrol;
+    HareketKontrol -> KapiPencereKontrol [label="Evet"];
+    HareketKontrol -> KapiPencereKontrol [label="Hayır"];
+
+    KapiPencereKontrol -> KameraAktivasyon [label="Evet"];
+    KapiPencereKontrol -> KameraAktivasyon [label="Hayır"];
+
+    KameraAktivasyon -> YanlisAlarm;
+    YanlisAlarm -> AlarmSeviyesi [label="Hayır"];
+    YanlisAlarm -> Bekle [label="Evet"];
+
+    AlarmSeviyesi -> Bildirim [label="Seviye > 0"];
+    AlarmSeviyesi -> Bekle [label="Seviye = 0"];
+
+    Bildirim -> AlarmSifirla;
+    AlarmSifirla -> Bekle [label="Hayır"];
+    AlarmSifirla -> AlarmSeviyesi [label="Evet, sıfırla"];
+
+    Bekle -> SensorOku [label="Sürekli"];
+
+}
+```
+
+---
+
+### Açıklama:
+
+* Ana döngü **Sensör okuma → Kontroller → Alarm/Bildirim → Bekle → Sensör okuma** şeklinde “Sürekli” geri ok ile gösterildi.
+* Karar noktaları diamond, işlemler box, başlangıç ve bitiş oval ile temsil edildi.
+* Yanlış alarm durumu ve alarm sıfırlama kontrolü dahil edildi.
+
+---
+
+İstersen ben bunu sana **çalıştırılabilir ve görselleştirilebilir bir DOT diyagramı** olarak hazırlayabilirim; böylece bütün akış tek bir diyagramda görünür hâle gelir.
+Bunu yapmamı ister misin?
+bu sistemi kısaca açıklar mısın
+Tabii! İşte IoT tabanlı akıllı ev güvenlik sistemi için kısa bir açıklama:
+Akıllı ev güvenlik sistemi 7/24 çalışır ve ana döngü içinde evin tüm sensörlerini sürekli olarak okur. Hareket sensörleri, kapı ve pencere sensörleri aracılığıyla olası tehditleri algılar. Tehdit tespit edilirse kamera aktive edilir ve alarm seviyesi belirlenir (1-düşük, 2-orta, 3-yüksek). Alarm durumunda kullanıcıya SMS, mobil uygulama ve e-posta yoluyla bildirim gönderilir. Yanlış alarm, ev sahibi evdeyse otomatik olarak engellenir. Alarm, sıfırlama komutu gelene kadar aktif kalır ve sistem belirli aralıklarla sensörleri tekrar kontrol ederek sürekli izleme sağlar.
+Tabii! İşte **IoT tabanlı akıllı ev güvenlik sistemi** için kısa bir açıklama:
+
+---
+
+Akıllı ev güvenlik sistemi 7/24 çalışır ve ana döngü içinde evin tüm sensörlerini sürekli olarak okur. Hareket sensörleri, kapı ve pencere sensörleri aracılığıyla olası tehditleri algılar. Tehdit tespit edilirse kamera aktive edilir ve alarm seviyesi belirlenir (1-düşük, 2-orta, 3-yüksek). Alarm durumunda kullanıcıya SMS, mobil uygulama ve e-posta yoluyla bildirim gönderilir. Yanlış alarm, ev sahibi evdeyse otomatik olarak engellenir. Alarm, sıfırlama komutu gelene kadar aktif kalır ve sistem belirli aralıklarla sensörleri tekrar kontrol ederek sürekli izleme sağlar.
+
+---
+
+İstersen ben bunu **5-6 cümlelik daha basit ve anlaşılır bir versiyona** da indirebilirim. Bunu yapmamı ister misin?
+evet
+Tamam! İşte 5-6 cümlelik daha basit ve anlaşılır açıklama:
+Akıllı ev güvenlik sistemi 7/24 çalışır ve evin tüm sensörlerini sürekli kontrol eder. Hareket, kapı ve pencere sensörleri aracılığıyla olası tehditleri tespit eder. Tehdit algılanırsa kamera devreye girer ve alarm seviyesi belirlenir. Alarm durumunda kullanıcıya SMS, uygulama ve e-posta ile bildirim gönderilir. Ev sahibi evdeyse yanlış alarmlar engellenir. Alarm, sıfırlama komutu gelene kadar aktif kalır ve sistem sürekli izlemeye devam eder.
